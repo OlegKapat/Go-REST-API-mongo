@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/OlegKapat/Rest-api-mongo/pkg/logging"
 	"net/http"
 
 	"github.com/OlegKapat/Rest-api-mongo/internal/handlers"
@@ -10,6 +11,7 @@ import (
 var _ handlers.Handler = &handler{}
 
 type handler struct {
+	logger *logging.Logger
 }
 
 const (
@@ -17,8 +19,10 @@ const (
 	userURL  = "/users/:uuid"
 )
 
-func NewHandler() handlers.Handler {
-	return &handler{}
+func NewHandler(logger *logging.Logger) handlers.Handler {
+	return &handler{
+		logger: logger,
+	}
 }
 
 func (h *handler) Register(router *httprouter.Router) {
