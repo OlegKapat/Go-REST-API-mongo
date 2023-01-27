@@ -1,8 +1,11 @@
 package main
 
 import (
+	//"context"
 	"fmt"
 	"github.com/OlegKapat/Rest-api-mongo/internal/config"
+	//"github.com/OlegKapat/Rest-api-mongo/internal/user/db"
+	//"github.com/OlegKapat/Rest-api-mongo/pkg/client/mongodb"
 	"github.com/OlegKapat/Rest-api-mongo/pkg/logging"
 	"net"
 	"net/http"
@@ -11,7 +14,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/OlegKapat/Rest-api-mongo/internal/user"
+	user "github.com/OlegKapat/Rest-api-mongo/internal/user"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -20,8 +23,16 @@ func main() {
 	logger := logging.GetLogger()
 	logger.Info("Logger work")
 	router := httprouter.New()
-
+	//
 	cfg := config.GetConfig()
+	//cfgMongo := cfg.MongoDB
+	//mongoDBClient, err := mongodb.NewClient(context.Background(), cfgMongo.Host, cfgMongo.Port,
+	//	cfgMongo.Username, cfgMongo.Password, cfgMongo.Database, cfgMongo.AuthDB)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//storage := db.NewStorage(mongoDBClient, cfg.MongoDB.Collection, logger)
+
 	logger.Info("Register user handler")
 	handler := user.NewHandler(logger)
 	handler.Register(router)

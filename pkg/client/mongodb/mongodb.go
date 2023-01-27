@@ -7,14 +7,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewClient(ctx context.Context, username, password, database, authDb string) (db *mongo.Database, err error) {
+func NewClient(ctx context.Context, host, port, username, password, database, authDb string) (db *mongo.Database, err error) {
 	var isAuth bool
+	var Mongo_URI string
 	if username == "" && password == "" {
-
+		Mongo_URI = fmt.Sprintf("mongodb://%s:%s", host, port)
 	} else {
 		isAuth = true
+		Mongo_URI = fmt.Sprintf("mongodb://%s:%s@%s:$s", username, password, host, port)
 	}
-	var Mongo_URI = fmt.Sprintf("mongodb+srv://%s:%s@cluster0.px7le.mongodb.net/%s?retryWrites=true&w=majority", username, password, database)
+
 	clientOptions := options.Client().ApplyURI(Mongo_URI)
 	if isAuth {
 		if authDb == "" {
