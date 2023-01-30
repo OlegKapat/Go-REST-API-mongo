@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/OlegKapat/Rest-api-mongo/internal/apperror"
 	"github.com/OlegKapat/Rest-api-mongo/internal/user"
 	"github.com/OlegKapat/Rest-api-mongo/pkg/logging"
 	"github.com/pkg/errors"
@@ -44,7 +45,7 @@ func (d *db) FindOne(ctx context.Context, id string) (u user.User, r error) {
 			//Err entity not found
 			return u, fmt.Errorf("ErrEntityNotFound")
 		}
-		return u, fmt.Errorf("failed to find one user by id:%/s due to error %v", id, err)
+		return u, apperror.ErrNotFound
 	}
 	if err = result.Decode(&u); err != nil {
 		return u, fmt.Errorf("failed to decode user from db by id:%/s due to error %v", id, err)
@@ -75,7 +76,7 @@ func (d *db) Delete(ctx context.Context, id string) error {
 		return fmt.Errorf("Failed to execute query. error %v", err)
 	}
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("not found")
+		return apperror.ErrNotFound
 	}
 	d.logger.Tracef("deleted %d documents", result.DeletedCount)
 	return nil
@@ -106,7 +107,7 @@ func (d *db) Update(ctx context.Context, user user.User) error {
 		return fmt.Errorf("faild to execute update user query,error %v", err)
 	}
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("not found")
+		return apperror.ErrNotFound
 	}
 	d.logger.Tracef("matched %d documents and Modified %d documents", result.MatchedCount, result.ModifiedCount)
 	return nil
